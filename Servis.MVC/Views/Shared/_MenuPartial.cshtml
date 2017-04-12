@@ -1,0 +1,56 @@
+﻿<!--==============================header=================================-->
+<header>
+    <div class="indent">
+        <div class="row-top">
+            <div class="wrapper">
+                <h1><a href="index.html">Handyman</a></h1>
+                <strong class="support">+1 959-456-7856</strong>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu">
+                <li><a class="active" href="@Url.Action("Index","Home")">Ana Sayfa</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="prices.html">Prices</a></li>
+                @*<li><a href="staff.html">Our Staff</a></li>
+                    <li class="last"><a href="contacts.html">Contacts</a></li>*@
+                <li><a href="@Url.Action("Kayit","Kayit")">Ariza Kaydi</a></li>
+                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                   
+                    <li><a href="@Url.Action("Profile","Account")">Uye Profili</a></li>
+                    <li><a href="@Url.Action("Logout","Account")">@HttpContext.Current.User.Identity.GetUserName() Cikis Yap</a></li>                    
+                }
+                else
+                {
+                    <li><a href="@Url.Action("Login","Account")">Giris Yap</a></li>
+                    <li><a href="@Url.Action("Register","Account")">Kayit Ol</a></li>
+                }
+                @if (HttpContext.Current.User.IsInRole("Operator"))
+                {
+                    <li><a href="@Url.Action("ArizaDetay","Admin")">Ariza Yonetimi</a></li>
+                }
+                @if (HttpContext.Current.User.IsInRole("Teknisyen"))
+                {
+                    <li><a href="@Url.Action("IsDetay","Teknisyen")">Teknisyen Sayfasi</a></li>
+                }
+                @*@if (HttpContext.Current.User.IsInRole("Üye"))
+                {
+                    <li><a href="@Url.Action("Anket","Kayit")">Anket</a></li>
+                }*@
+            </ul>
+        </nav>
+    </div>
+    <div class="wrapper">
+        <div class="slider">
+            <ul class="items">
+                <li><img src="~/images/slider-img1.jpg" alt=""></li>
+                <li><img src="~/images/slider-img2.jpg" alt=""></li>
+                <li><img src="~/images/slider-img3.jpg" alt=""></li>
+            </ul>
+        </div>
+        <a class="prev">prev</a> <a class="next">next</a>
+        <div class="banner1-bg"></div>
+        <div class="banner-1"></div>
+    </div>
+</header>

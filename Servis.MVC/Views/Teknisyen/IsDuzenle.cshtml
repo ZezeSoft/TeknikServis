@@ -1,0 +1,87 @@
+﻿@model KayitViewModel
+@{
+    ViewBag.Title = "IsDuzenle";
+    Layout = "~/Views/Shared/Teknisyen/_TeknisyenLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-7 col-md-7 ">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                İş Düzenleme Sayfası
+            </div>
+            <div class="panel-body">
+                @Html.ValidationSummary()
+                @using (Html.BeginForm("IsDuzenle", "Teknisyen", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.HiddenFor(x => x.ID)
+                    <div class="form-group">
+                        <label for="kullaniciadi" class="col-sm-2 control-label">Kayıt Sahibi</label>
+                        <div class="col-sm-10">
+                            <input type="text" value="@Servis.BLL.Account.MembershipTools.GetUserName(Model.KullaniciID)" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cihazdurumu" class="col-sm-2 control-label">Cihaz Türü</label>
+                        <div class="col-sm-10">
+                            <input type="text" value="@(new Servis.BLL.Repository.CihazRepo().GetById(Model.CihazID).Tur)" class="form-control disabled" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="marka" class="col-sm-2 control-label">Marka</label>
+                        <div class="col-sm-10">
+                            <input type="text" value="@(new Servis.BLL.Repository.MarkaRepo().GetById(Model.MarkaID).Tur)" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Aciklama, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(x => x.Aciklama, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Adres, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Adres, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Enlem, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Enlem, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Boylam, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Boylam, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.EklenmeTarihi, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.EklenmeTarihi, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.OnaylanmaTarihi, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.OnaylanmaTarihi, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ArizaDurumuID, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(x => x.ArizaDurumuID, (List<SelectListItem>)ViewBag.arizadurumlari, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-warning">Güncelle</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

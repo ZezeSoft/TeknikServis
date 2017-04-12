@@ -1,0 +1,54 @@
+﻿@using System.Linq.Expressions;
+@using System.Linq;
+@model List<KayitViewModel>
+@{
+    ViewBag.Title = "BitenIs";
+    Layout = "~/Views/Shared/Teknisyen/_TeknisyenLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Tamamlanmış İşlerin Listesi
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cihaz Türü</th>
+                                <th>Marka</th>
+                                <th>Açıklama</th>
+                                <th>Yönetim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sayac = 0;
+                                foreach (var item in Model.Where(x => x.AtandiMi == true && x.ArizaDurumuID == 3).ToList())
+                                {
+                                    if (item.TeknisyenID == HttpContext.Current.User.Identity.GetUserId())
+                                    {
+                                        sayac++;
+                                        <tr>
+                                            <td>@sayac</td>
+                                            <td>@(new Servis.BLL.Repository.CihazRepo().GetById(item.CihazID).Tur)</td>
+                                            <td>@(new Servis.BLL.Repository.MarkaRepo().GetById(item.MarkaID).Tur)</td>
+                                            <td>@item.Aciklama</td>
+                                            <td>
+                                                <a href="@Url.Action("IsDuzenle", "Teknisyen", new {id=item.ID })" class="btn btn-sm btn-warning guncelle" role="button">İş Detayı Gör</a>
+                                                <a href="@Url.Action("Raporlama", "Teknisyen", new {id=item.ID })" class="btn btn-sm btn-success raporlama" role="button">Rapor Hazırla</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

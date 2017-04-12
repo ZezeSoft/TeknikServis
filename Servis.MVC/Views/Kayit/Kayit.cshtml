@@ -1,0 +1,131 @@
+﻿@model KayitViewModel
+@{
+    ViewBag.Title = "Kayit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="Kayit">
+    <div class="container">
+        <div class="col-lg-7 col-md-7">
+            <h3 class="title">Arıza Kaydı</h3>
+            @Html.ValidationSummary()
+            @using (Html.BeginForm("Kayit", "Kayit", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(x => x.CihazID, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(x => x.CihazID, (List<SelectListItem>)ViewBag.cihazturleri, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.MarkaID, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(x => x.MarkaID, (List<SelectListItem>)ViewBag.markalar, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Aciklama, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(x => x.Aciklama, new { @class = "form-control", placeholder = "Arıza ile ilgili açıklama giriniz" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Adres, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => x.Adres, new { @class = "form-control", placeholder = "Adresinizi Giriniz" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Enlem, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => x.Enlem, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Boylam, new { @class = "col-sm-2 label-control" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => x.Boylam, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="galeri" class="control-label">Fotograflar</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => x.Dosyalar, new { multiple = "multiple", @class = "form-control", type = "file" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-info">Kayıt Oluştur</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-lg-5 col-md-5">
+            <div class="row">
+                <div id="harita"></div>
+                <input type="button" id="btnkonum" value="Konumumu Getir"/>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #harita{
+        width:100%;
+        height:400px;
+        background-color:#0ea34c;
+    }
+</style>
+@*<script src="~/js/jquery-1.11.1.min.js"></script>*@
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script>
+    $("#btnkonum").click(function () {
+        navigator.geolocation.getCurrentPosition(koordinat);
+    });
+    function koordinat(position) {
+        var enlemboylam = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+        var ayar = {
+            center: enlemboylam,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: true,
+            navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL }
+        };
+
+        var haritatutucu = document.getElementById("harita");
+        var googleHarita = new google.maps.Map(haritatutucu, ayar);
+
+        var imlec = new google.maps.Marker({
+            position: enlemboylam,
+            map: googleHarita,
+            title: "Konumunuz"
+        });
+        googleHarita.addListener("click", function () {
+            imlec.setMap(null);
+        });
+        googleHarita.addListener('click', function (e) {
+            placeMarkerAndPanTo(e.latLng, googleHarita);
+        });
+        function placeMarkerAndPanTo(latLng, map) {
+            google.maps.Marker
+            imlec = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });
+
+            var enlem = latLng.lat();
+            var boylam = latLng.lng();
+
+            enlem = enlem.toString().replace(".", ",");
+            boylam = boylam.toString().replace(".", ",");
+            console.log(enlem);
+            console.log(boylam);
+            $("#Enlem").val(enlem);
+            $("#Boylam").val(boylam);
+        }
+    }
+    function init() {//Sayfa ilk açılırken Harita dolu gelmiş oluyor.Initialize function.En yukarıdaki function ı tekrar çağırıyoruz
+        navigator.geolocation.getCurrentPosition(koordinat);
+    }
+    init();
+</script>

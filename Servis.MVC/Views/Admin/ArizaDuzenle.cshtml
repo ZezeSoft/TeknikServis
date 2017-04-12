@@ -1,0 +1,223 @@
+﻿@model KayitViewModel
+@{
+    ViewBag.Title = "ArizaDuzenle";
+    Layout = "~/Views/Shared/Admin/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                Arıza Düzenleme Sayfası
+            </div>
+            <div class="panel-body">
+                @Html.ValidationSummary()
+                @using (Html.BeginForm("ArizaDuzenle", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.HiddenFor(x=> x.ID)
+                    <div class="form-group">
+                        <label for="kullaniciadi" class="col-sm-2 control-label">Kullanıcı Adı</label>
+                        <div class="col-sm-10">
+                            <input type="text" value="@Servis.BLL.Account.MembershipTools.GetUserName(Model.KullaniciID)" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CihazID, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(x => x.CihazID, (List<SelectListItem>)ViewBag.cihazturleri, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.MarkaID, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(x => x.MarkaID, (List<SelectListItem>)ViewBag.markalar, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Aciklama, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(x => x.Aciklama, new { @class = "form-control", placeholder = "Arıza ile ilgili açıklama giriniz" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Adres, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Adres, new { @class = "form-control", placeholder = "Adresinizi Giriniz" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Enlem, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Enlem, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Boylam, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Boylam, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.EklenmeTarihi, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.EklenmeTarihi, new { @class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.OnaylanmaTarihi, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.OnaylanmaTarihi, new { @class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.OnaylandiMi, new { @class = "col-sm-2 label-control" })
+                        <div class="col-sm-10">
+                            @Html.CheckBoxFor(x => x.OnaylandiMi, new { @class = "checkbox" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="galeri" class="control-label">Fotograflar</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.Dosyalar, new { multiple = "multiple", @class = "form-control", type = "file" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-info">Kaydı Güncelle</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5">
+        <div class="row">
+            <div id="harita"></div>
+        </div>
+        <div class="row">
+            @if (Model.Fotograflar.Count == 0)
+            {
+                <h3 class="text-center text-danger">Galeride Fotograf Yok</h3>
+            }
+            else
+            {
+                <div class="center-block">
+                    @foreach (string path in Model.Fotograflar)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6">
+                                <label class="btn btn-primary">
+                                    <img src="~/@path" alt="..." class="img-thumbnail img-check">
+                                    <input type="checkbox" name="chk1" id="item4" value="val1" class="hidden" autocomplete="off">
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <input type="button" class="btn btn-block btn-warning" value="Seçili Resimleri Sil" id="btnresimsil" />
+            }
+        </div>
+    </div>
+</div>
+<style>
+    #harita {
+        width: 100%;
+        height: 400px;
+        background-color: #fc7f7f;
+    }
+
+    .check {
+        opacity: 0.5;
+        color: #996;
+    }
+</style>
+@*<script src="~/js/jquery-1.11.1.min.js"></script>*@
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script>
+    function koordinat() {
+        var enlem = $("#Enlem").val();
+        var boylam = $("#Boylam").val();
+        enlem = enlem.toString().replace(",", ".");
+        boylam = boylam.toString().replace(",", ".");
+        var enlemboylam = new google.maps.LatLng(enlem, boylam);//google enlem boylam değerlerini noktalı tanıdığı için noktaya çevirip tekrar yolluyoruz
+
+        var ayar = {
+            center: enlemboylam,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: true,
+            navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL }
+        };
+
+        var haritatutucu = document.getElementById("harita");
+        var googleHarita = new google.maps.Map(haritatutucu, ayar);
+        var imlec = new google.maps.Marker({
+            position: enlemboylam,
+            map: googleHarita,
+            title: "Konumumuz"
+        });
+        googleHarita.addListener("click", function () {
+            console.log("Tıklandı");
+            imlec.setMap(null);
+        });
+
+        googleHarita.addListener('click', function (e) {
+            placeMarkerAndPanTo(e.latLng, googleHarita);
+        });
+        function placeMarkerAndPanTo(latLng, map) {
+            google.maps.Marker
+            imlec = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });
+
+            var enlem = latLng.lat();
+            var boylam = latLng.lng();
+
+            enlem = enlem.toString().replace(".", ",");
+            boylam = boylam.toString().replace(".", ",");
+            console.log(enlem);
+            console.log(boylam);
+            $("#Enlem").val(enlem);
+            $("#Boylam").val(boylam);
+            //googleHarita.panTo(latLng);
+        }
+    }
+    function init() {//Sayfa ilk açılırken Harita dolu gelmiş oluyor.
+        koordinat();
+    }
+    init();
+    $(document).ready(function (e) {
+        $(".img-check").click(function () {
+            $(this).toggleClass("check");//aç kapa switch gibi çalışıyor/check ekliyor
+        });
+    });
+    var resimler = {};
+    $("#btnresimsil").click(function () {
+        resimler = $(".check");
+        var yollar = [];
+        //var resimler2 = document.getElementsByClassName(".check");
+        console.log(resimler);
+        //$(resimler[0]).attr("src");
+        for (var i = 0; i < resimler.length; i++) {
+            yollar.push($(resimler[i]).attr("src"));
+            //'attr iki türlü kullanımı var tek parametreli olduğunda parametredeki değeri döndürüyor,çift parametreli olduğunda ilk yazılan parametre attribute ismine, ikinci parametredeki değeri atıyor'
+        }
+        var postData = { values: yollar };
+        console.log(yollar);
+        $.ajax({
+            url: '@Url.Action("ResimSil","Admin")',
+            data: postData,
+            dataType: 'JSON',
+            type: 'POST',
+            success: function (data) {
+                window.location.href = '@Url.Action("IlanDetay","Admin", new { id = Model.ID })';
+                alert(data.message)
+            },
+            errorr: function (err) {
+                alert(err);
+            }
+        });
+    });
+
+</script>
